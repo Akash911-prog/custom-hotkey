@@ -1,7 +1,9 @@
-// #![windows_subsystem = "windows"]
+#![windows_subsystem = "windows"]
 
 use std::thread;
 use tao::event_loop::{ControlFlow, EventLoopBuilder};
+use tracing_appender::rolling;
+use tracing_subscriber::fmt;
 use tray_icon::{
     TrayIconBuilder,
     menu::{Menu, MenuEvent, MenuItem},
@@ -11,6 +13,21 @@ use win_hotkeys::{HotkeyManager, VKey};
 pub mod force_quit;
 
 fn main() {
+    // Rolls over to a new file daily: logs/force_quit.2025-01-15.log
+    let file_appender = rolling::daily("logs", "force_quit.log");
+    let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
+
+    // _guard must be held for the lifetime of the program —
+    // dropping it flushes and closes the log file.
+    // Bind it to a variable in main so it lives until process exit.
+
+    fmt::Subscriber::builder()
+        .with_writer(non_blocking)
+        .with_ansi(false) // no color escape codes in log files
+        .with_target(false) // skip module path noise
+        .with_thread_ids(false)
+        .init();
+
     let mut hotkey_manager: HotkeyManager<()> = HotkeyManager::new();
 
     hotkey_manager

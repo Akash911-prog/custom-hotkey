@@ -9,14 +9,19 @@ windows = { version = "0.60", features = [
     "Win32_UI_WindowsAndMessaging",
     "Win32_System_Threading",
     "Win32_System_ProcessStatus",
+    "Win32_System_Com",
+    "Win32_UI_Shell",
 ] }
 tray-icon = "0.14"
 tao = "0.25"
+tracing = "0.1"
+tracing-appender = "0.2"
+tracing-subscriber = { version = "0.3", features = ["fmt", "json"] }
 
 [build-dependencies]
 
 [[bin]]
-name = "audio-hotkeys"
+name = "hotkeys"
 path = "src/main.rs"
 
 [profile.release]
