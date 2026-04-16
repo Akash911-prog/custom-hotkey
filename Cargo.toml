@@ -1,0 +1,24 @@
+[package]
+name = "custom-hotkey"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+win-hotkeys = "0.5.1"
+windows = { version = "0.60", features = [
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_System_Threading",
+    "Win32_System_ProcessStatus",
+] }
+tray-icon = "0.14"
+tao = "0.25"
+
+[build-dependencies]
+
+[[bin]]
+name = "audio-hotkeys"
+path = "src/main.rs"
+
+[profile.release]
+opt-level = "z"
+strip = true
